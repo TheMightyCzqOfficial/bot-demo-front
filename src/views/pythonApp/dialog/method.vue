@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <span>登录账号配置</span> -->
     <el-card shadow="always" style="margin-top: 10px">
       <el-button type="primary" size="small" @click="handleAdd()">新增</el-button>
       <el-table
