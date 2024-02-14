@@ -66,7 +66,7 @@ export const delMethod = ({methodId}) => request({
     methodId
   }
 })
-export const addMethod = ({methodName ,url, methodType , createDate , userType, stepCount,editable,stepData}) => request({
+export const addMethod = ({methodName , methodType , createDate , userType, stepCount,editable,stepData}) => request({
   url: '/addMethod',
   method: 'POST',
   data:{
@@ -77,10 +77,10 @@ export const addMethod = ({methodName ,url, methodType , createDate , userType, 
     stepCount,
     editable,
     stepData,
-    url
+    
   }
 })
-export const setMethod = ({methodId,methodName ,url, methodType , createDate , userType, stepCount,editable,stepData}) => request({
+export const setMethod = ({methodId,methodName , methodType , createDate , userType, stepCount,editable,stepData}) => request({
   url: '/setMethod',
   method: 'POST',
   data:{
@@ -92,7 +92,7 @@ export const setMethod = ({methodId,methodName ,url, methodType , createDate , u
     stepCount,
     editable,
     stepData,
-    url
+    
   }
 })
 export const downloadMethodExcel = ({methodId}) => request({
@@ -100,6 +100,20 @@ export const downloadMethodExcel = ({methodId}) => request({
   method: 'POST',
   data:{
     methodId
+  }
+})
+export const openAndLogin = ({pk}) => request({
+  url: '/openAndLogin',
+  method: 'POST',
+  data:{
+    pk
+  }
+})
+export const closeAndLogout = ({pk}) => request({
+  url: '/closeAndLogout',
+  method: 'POST',
+  data:{
+    pk
   }
 })
 export function upload(file){

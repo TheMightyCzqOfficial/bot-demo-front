@@ -3,8 +3,8 @@
         <div class="tabs">
             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
   <el-menu-item index="1">登录账号配置</el-menu-item>
-  <el-menu-item index="2">方法配置</el-menu-item>
-  <el-menu-item index="3" disabled="">运行方法</el-menu-item>
+  <el-menu-item index="2">方法管理</el-menu-item>
+  <el-menu-item index="3" disabled>运行方法</el-menu-item>
   <!-- <el-submenu index="2">
     <template slot="title" >我的工作台</template>
     <el-menu-item index="2-1">批量重置密码</el-menu-item>
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       loading: true,
-      activeIndex: '1',
+      activeIndex: '2',
     };
   },
 
@@ -63,7 +63,7 @@ export default {
 
 <style lang="scss" scoped>
 .tabs{
-    width: 60%;
+    width: 70%;
     margin: 0 auto;
 }
 .mainWindow{

@@ -27,30 +27,41 @@
   inactive-color="#13ce66"></el-switch>
     <div style="margin-top: 10px;height:500px;overflow:auto">
       <el-card   v-for="(item,index) in userFormList" :key="index">
-        <el-form label-position="right" label-width="100px" :model="item" :inline="true" class="demo-form-inline">
+        <el-form  label-width="90px" :model="item" :inline="true" class="demo-form-inline">
           <el-row>
             <el-col :span="6">
           <el-form-item label="账号：">
-            <el-input v-model="item.username" v-show="item.isEdit==true" style="width: 140px;"></el-input>
+            <el-input v-model="item.username" v-show="item.isEdit==true" style="width: 120px;"></el-input>
             <span v-show="item.isEdit==false">{{ item.username }}</span>
           </el-form-item>
         </el-col>
           <el-col :span="6">
           <el-form-item label="密码：">
-            <el-input v-model="item.password" v-show="item.isEdit==true" style="width: 140px;"></el-input>
+            <el-input v-model="item.password" v-show="item.isEdit==true" style="width: 120px;"></el-input>
             <span v-show="item.isEdit==false">{{ item.password }}</span>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
         <el-form-item label="平台类型：">
-        <el-radio v-model="item.type" label="2" :disabled="!item.isEdit">远光二开</el-radio>
-        <el-radio v-model="item.type" label="1" :disabled="!item.isEdit">财务共享</el-radio>
+          <el-select v-model="item.type" placeholder="请选择" :disabled="!item.isEdit" style="width: 120px;">
+            <el-option
+             label="财务共享"
+            value="1">
+            </el-option>
+            <el-option
+             label="远光二开"
+            value="2">
+            </el-option>
+          </el-select>
         </el-form-item>
         </el-col>
-        <el-col :span="4">
-          <el-form-item ><el-button size="small" type="primary" style="margin-bottom: 10px;" @click="modify(index)" v-show="item.isEdit==false">修改</el-button>
-         <el-button size="small" type="success" style="margin-bottom: 10px;" @click="save(index)" v-show="item.isEdit==true">保存</el-button>
-          <el-button size="small" type="danger" style="margin-bottom: 10px;" @click="del(index)">删除</el-button></el-form-item>
+        <el-col :span="6">
+          <el-form-item ><el-button size="small" type="primary" style="margin-bottom: 10px;" @click="modify(index)" v-show="item.isEdit==false">修 改</el-button>
+         <el-button size="small" type="success" style="margin-bottom: 10px;" @click="save(index)" v-show="item.isEdit==true">保 存</el-button>
+          <el-button size="small" type="danger" style="margin-bottom: 10px;" @click="del(index)">删 除</el-button>
+          <el-button size="small" type="success" style="margin-bottom: 10px;" @click="login(index)" v-show="item.isLogin==false" :loading="item.loginLoading">登 录</el-button>
+          <el-button size="small" type="danger" style="margin-bottom: 10px;" @click="logout(index)" v-show="item.isLogin==true" :loading="item.loginLoading">登 出</el-button></el-form-item>
+          
         </el-col>
         </el-row>
         </el-form>   
@@ -65,6 +76,8 @@ import { getUserConfig } from "api/python";
 import { setUserConfig } from "api/python";
 import { addUserConfig } from "api/python";
 import { delUserConfig } from "api/python";
+import { openAndLogin } from "api/python";
+import { closeAndLogout } from "api/python";
 export default {
   props:[],
   computed: {},
@@ -93,37 +106,10 @@ export default {
       ygekList:[],
     };
   },
-  // destroyed(){
-  //   this.$socket.emit('disconnect')
-  // },
+
   created() {this.getConfig()},
 
-  // sockets:{  
-  //   connect: function(){  
-  //     console.log('socket 连接成功')  
-  //   },  
-  //   initMessage: function(res){
-  //     res=JSON.parse(res) 
-  //     console.log(res)
-  //     if(res.isLogin){
-  //       this.isLogin=true
-  //     }
-  //   },
-  //   messageFormPython: function(res){  
-  //     res=JSON.parse(res) 
-  //     if(res.messageList.length>this.messageList.length){
-  //       this.messageList=res.messageList
-  //       this.$nextTick(()=>{
-  //         let div=document.getElementById('message')
-  //       div.scrollTop=div.scrollHeight
-  //       })
-  //     }
-  //   },
-  //   },  
   methods: {
-    // init(){
-    //   this.$socket.emit('init')
-    // },
     handleOpen(){
       this.visible=!this.visible
       if(this.usertype){
@@ -157,7 +143,7 @@ export default {
         getUserConfig().then(res=>{
           let keys=Object.keys(res.data)
           for(let i=0;i<keys.length;i++){
-            let userData={...res.data[keys[i]],"pk":keys[i],"isEdit":false}
+            let userData={...res.data[keys[i]],"pk":keys[i],"isEdit":false,"loginLoading":false}
             if(res.data[keys[i]]["type"]==1){
               this.cwgxList.push(userData)
             }else{
@@ -189,6 +175,59 @@ export default {
             type: 'success',
             message: '删除成功!'
           });
+        })
+    },
+    login(index){
+      this.$confirm('是否登录 '+this.userFormList[index].username+' ?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'success'
+        }).then(() => {
+          this.$notify({
+          type:'success',
+          message: '登录指令发送成功，请耐心等待'
+        })
+        this.userFormList[index].loginLoading=true
+        let data={
+          pk:this.userFormList[index].pk
+        }
+          openAndLogin(data).then(res=>{
+        if(res.status=="111"){
+          this.$message({
+            type: 'success',
+            message: '登录成功!'
+          });
+          this.userFormList[index].loginLoading=false
+          this.getConfig()
+        }
+        }).catch((error) => {
+              this.$message.error("登录失败，请检查");
+            });
+        })
+    },
+    logout(index){
+      this.$confirm('是否退出登录 '+this.userFormList[index].username+' ?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let data={
+          pk:this.userFormList[index].pk
+        }
+        this.userFormList[index].loginLoading=true
+          closeAndLogout(data).then(res=>{
+        if(res.status=="111"){
+          this.$message({
+            type: 'success',
+            message: '已退出登录'
+          });
+          this.userFormList[index].loginLoading=false
+          this.getConfig()
+        }
+        }).catch((error) => {
+              this.$message.error(error);
+            });
+         
         })
     },
     save(index){

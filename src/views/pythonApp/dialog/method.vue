@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card shadow="always" style="margin-top: 10px">
-      <el-button type="primary" size="small" @click="handleAdd()">新增</el-button>
+      <el-button type="primary" size="small" @click="handleAdd()">新增方法</el-button>
       <el-table
       :data="tableData"
       style="width: 100%">
@@ -12,11 +12,6 @@
         <template slot-scope="scope">
           <el-link type="primary" @click="handleEdit(scope.row)" :disabled="!scope.row.editable">{{scope.row.methodName}}</el-link>
       </template>
-      </el-table-column>
-      <el-table-column
-        prop="url"
-        label="运行网址"
-        min-width="250">
       </el-table-column>
       <el-table-column
       prop="methodType"
@@ -60,12 +55,11 @@
       </el-table-column>
       <el-table-column
       fixed="right"
-      width="300">
+      width="180">
       <template slot="header">
         <el-button type="primary" size="mini" icon="el-icon-full-screen" @click="methodListDialogVisible=true" style="float: right;"></el-button>
       </template>
       <template slot-scope="scope">
-        <el-button type="success" size="small" @click="handleExecute(scope.row)">执行</el-button>
         <el-button type="primary" size="small" @click="handleEdit(scope.row)"  :disabled="!scope.row.editable">配置</el-button>
         <el-button type="danger" size="small" @click="handleDel(scope.row)">删除</el-button>
       </template>
@@ -88,11 +82,6 @@
       </template>
       </el-table-column>
       <el-table-column
-        prop="url"
-        label="运行网址"
-        min-width="250">
-      </el-table-column>
-      <el-table-column
       prop="methodType"
         label="平台类型"
         min-width="120">
@@ -136,7 +125,7 @@
       fixed="right"
       width="300">
       <template slot-scope="scope">
-        <el-button type="success" size="small" @click="handleExecute(scope.row)">执行</el-button>
+        <!-- <el-button type="success" size="small" @click="handleExecute(scope.row)">执行</el-button> -->
         <el-button type="primary" size="small" @click="handleEdit(scope.row)"  :disabled="!scope.row.editable">配置</el-button>
         <el-button type="danger" size="small" @click="handleDel(scope.row)">删除</el-button>
       </template>
@@ -159,11 +148,6 @@
       <el-col :span="10">
         <el-form-item label="方法名称" prop="methodName">
     <el-input v-model="methodForm.methodName"></el-input>
-  </el-form-item>
-      </el-col>
-      <el-col :span="10">
-        <el-form-item label="方法网址" prop="url">
-    <el-input v-model="methodForm.url"></el-input>
   </el-form-item>
       </el-col>
     </el-row>
@@ -310,13 +294,9 @@ export default {
           userType: [
             { required: true, message: '请选择账号类型', trigger: 'change' }
           ],
-          url: [
-            { required: true, message: '请输入方法对应网址', trigger: 'blur' }
-          ]
         },
       methodForm:{
         methodName:'',
-        url:'',
         methodType:'',
         editable:'是',
         userType:'',
@@ -420,7 +400,6 @@ export default {
     reset(){
           this.methodForm={
         methodName:'',
-        url:'',
         methodType:'',
         editable:'是',
         userType:'',
@@ -459,7 +438,6 @@ export default {
           this.methodForm['userType']=res.data.userType
           this.methodForm['stepCount']=res.data.stepCount
           this.methodForm['methodId']=res.data.methodId
-          this.methodForm['url']=res.data.url
           this.stepList=[]
           Object.keys(res.data.stepData).forEach(item=>{
             this.stepList.push(res.data.stepData[item])
