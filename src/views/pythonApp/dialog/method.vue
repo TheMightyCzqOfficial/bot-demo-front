@@ -213,37 +213,67 @@
 </el-col>
 <el-col :span="6"> <el-button type="primary" @click="stepDialogVisible=true" icon="el-icon-search">查看所有步骤</el-button></el-col>
     </el-row>
-    
   </div>
   <el-divider></el-divider>
-  <div style="height: 100%;overflow:auto;margin-left:auto;width:73%">
-    
+  <div style="height: 100%;overflow:auto;margin-left:10%;">
     <el-form :model="stepList[currentStep]" label-width="180px" style="margin-top: 20px;">
-        <el-form-item label="步骤名称">
+      <el-row>
+        <el-col>
+          <el-form-item label="步骤名称">
     <el-input v-model="stepList[currentStep].stepName" clearable style="width: 300px;"></el-input>
   </el-form-item>
-        <el-form-item label="执行动作">
-      <el-radio v-model="stepList[currentStep].action" label="input">输入文本</el-radio>
-      <el-radio v-model="stepList[currentStep].action" label="click">点击</el-radio>
-      <el-radio v-model="stepList[currentStep].action" label="enterFrame">进入iframe</el-radio>
-      <el-radio v-model="stepList[currentStep].action" label="exitFrame">退出iframe</el-radio>
-      <!-- <el-radio v-model="stepList[currentStep].action" label="">备选项</el-radio> -->
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col >
+          <el-form-item label="执行动作">
+          <el-select v-model="stepList[currentStep].action" placeholder="请选择执行动作">
+              <el-option label="输入文本" value="input"></el-option>
+              <el-option label="点击" value="click"></el-option>
+              <el-option label="进入iframe" value="enterFrame"></el-option>
+              <el-option label="退出iframe" value="exitFrame"></el-option>
+              <el-option label="切换至新窗口" value="switchToNewWindow"></el-option>
+              <el-option label="关闭窗口并返回" value="switchToPreWindow"></el-option>
+              <el-option label="刷新该页面" value="refresh"></el-option>
+          </el-select>
   </el-form-item>
-    
-        <el-form-item label="元素Xpath">
-          <el-input v-model="stepList[currentStep].xpath" clearable style="width: 500px;"></el-input>
-  </el-form-item>
-    
-      <el-form-item label="Xpath列表索引">
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="7">
+            <el-form-item label="元素Xpath">
+            <el-input v-model="stepList[currentStep].xpath" clearable style="width: 300px;"></el-input>
+    </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="Xpath列表索引">
         <el-input-number v-model="stepList[currentStep].xpathIndex" :min="0"></el-input-number>
   </el-form-item>
-      <el-form-item label="定位文本（下拉框内容）">
-        <el-input v-model="stepList[currentStep].locateText" clearable style="width: 500px;"></el-input>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="定位文本（下拉框内容）">
+        <el-input v-model="stepList[currentStep].locateText" clearable style="width: 300px;"></el-input>
   </el-form-item>
-   
-  <el-form-item label="下一步骤等待时长（秒）">
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col >
+          <el-form-item label="下一步骤等待时长（秒）">
     <el-input-number v-model="stepList[currentStep].waitSecond" :min="0"></el-input-number>
   </el-form-item>
+        </el-col>
+      </el-row>
+      <!-- <el-row>
+        <el-col :span="8">
+
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8">
+
+        </el-col>
+      </el-row>
+         -->
 </el-form>
   </div>
 </div>
